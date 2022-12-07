@@ -4,6 +4,9 @@ const app = express();
 const bodyParser = require("body-parser");
 const spFunction = require("./storedProcedure");
 const router = require("./apiMethod");
+const cors = require("cors");
+
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
