@@ -92,11 +92,7 @@ const spsiparisList = async () => {
 };
 
 const spSiparisEkle = async (
-  siparisTarihi,
-  teslimTarihi,
-  siparisDurumID,
   musteriNotu,
-  firmaNotu,
   ilID,
   acikAdres,
   telefon,
@@ -106,11 +102,7 @@ const spSiparisEkle = async (
 ) => {
   return await sqlConRes
     .request()
-    .input("SiparisTarihi", sql.DateTime, siparisTarihi)
-    .input("TeslimTarihi", sql.DateTime, teslimTarihi)
-    .input("SiparisDurumID", sql.Int, siparisDurumID)
     .input("MusteriNotu", sql.VarChar(300), musteriNotu)
-    .input("FirmaNotu", sql.VarChar(300), firmaNotu)
     .input("IlID", sql.Int, ilID)
     .input("AcikAdres", sql.VarChar(300), acikAdres)
     .input("Telefon", sql.VarChar(20), telefon)
@@ -120,35 +112,42 @@ const spSiparisEkle = async (
     .execute("usp_SiparisEkle");
 };
 
-const spSiparisGuncelle = async (
-  id,
-  siparisTarihi,
-  teslimTarihi,
-  siparisDurumID,
-  musteriNotu,
-  firmaNotu,
-  ilID,
-  acikAdres,
-  telefon,
-  ad,
-  soyad,
-  toplamFiyat
-) => {
+const spSiparisUrunEkle = async ({
+  siparisId,
+  urunId,
+  urunFiyati,
+  siparisAdedi,
+}) => {
+  return await sqlConRes
+    .request()
+    .input("siparisId", sql.Int, siparisId)
+    .input("urunId", sql.Int, urunId)
+    .input("urunFiyati", sql.Money, urunFiyati)
+    .input("siparisAdedi", sql.Int, siparisAdedi)
+    .execute("usp_SiparisUrunEkle");
+};
+
+const spSiparisGuncelle = async (id, siparisDurumId) => {
   return await sqlConRes
     .request()
     .input("ID", sql.Int, id)
-    .input("SiparisTarihi", sql.DateTime, siparisTarihi)
-    .input("TeslimTarihi", sql.DateTime, teslimTarihi)
-    .input("SiparisDurumID", sql.Int, siparisDurumID)
-    .input("MusteriNotu", sql.VarChar(300), musteriNotu)
-    .input("FirmaNotu", sql.VarChar(300), firmaNotu)
-    .input("IlID", sql.Int, ilID)
-    .input("AcikAdres", sql.VarChar(300), acikAdres)
-    .input("Telefon", sql.VarChar(20), telefon)
-    .input("Ad", sql.VarChar(100), ad)
-    .input("Soyad", sql.VarChar(100), soyad)
-    .input("ToplamFiyat", sql.Money, toplamFiyat)
+    .input("SiparisDurumID", sql.Int, siparisDurumId)
     .execute("usp_SiparisGuncelle");
+};
+//#endregion
+
+//#region URUNDETAY
+const spUrunDetayList = async (id) => {
+  return await sqlConRes
+    .request()
+    .input("ID", sql.Int, id)
+    .execute("usp_UrunDetayList");
+};
+//#endregion
+
+//#region Iller
+const spIlList = async () => {
+  return await sqlConRes.request().execute("usp_IlList");
 };
 //#endregion
 
@@ -163,5 +162,8 @@ module.exports = {
   spUrunSil,
   spsiparisList,
   spSiparisEkle,
-  spSiparisGuncelle
+  spSiparisGuncelle,
+  spUrunDetayList,
+  spSiparisUrunEkle,
+  spIlList
 };
